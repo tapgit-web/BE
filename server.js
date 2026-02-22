@@ -29,6 +29,23 @@ app.get('/admin/licenses', (req, res) => {
     });
 });
 
+// Route to add a new license key
+app.post('/admin/add', (req, res) => {
+    const { key } = req.body;
+    const db = require('./utils/db');
+
+    if (!key) {
+        return res.status(400).json({ success: false, msg: "Key is required" });
+    }
+
+    const added = db.addLicense(key.toUpperCase());
+    if (added) {
+        res.json({ success: true, msg: `License ${key} added successfully` });
+    } else {
+        res.status(400).json({ success: false, msg: "License key already exists" });
+    }
+});
+
 app.listen(config.PORT, () => {
     console.log(`License Activation Server running on port ${config.PORT}`);
     console.log(`Endpoint ready: POST /activate`);
