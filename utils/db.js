@@ -60,6 +60,23 @@ const db = {
             return true;
         }
         return false;
+    },
+
+    /**
+     * Adds a new license key to the database.
+     * @param {string} key - The new license key.
+     */
+    addLicense: (key) => {
+        const licenses = db.readLicenses();
+        if (licenses.find(l => l.key === key)) return false; // Already exists
+
+        licenses.push({
+            key: key,
+            status: 'new',
+            hwid: "null"
+        });
+        db.writeLicenses(licenses);
+        return true;
     }
 };
 
